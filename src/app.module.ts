@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService, ConfigModule } from '@nestjs/config';
+import { UserModule } from './user/user.module';
 import envConfig from '../config/env';
 
 @Module({
@@ -27,6 +28,7 @@ import envConfig from '../config/env';
         synchronize: true, //根据实体自动创建数据库表， 生产环境建议关闭
       }),
     }),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
