@@ -1,16 +1,8 @@
-import {
-  Entity,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Entity, Column } from 'typeorm';
+import { CommonEntity } from '@/common/common.entity';
 
 @Entity('user')
-export class UserEntity {
-  @PrimaryGeneratedColumn()
-  id: number; // 标记为主列，值自动生成
-
+export class UserEntity extends CommonEntity {
   @Column()
   username: string;
 
@@ -18,18 +10,8 @@ export class UserEntity {
   password: string;
 
   @Column({ nullable: true })
+  nickname: string;
+
+  @Column({ nullable: true })
   avatar: string;
-
-  @CreateDateColumn({ type: 'timestamp', nullable: true })
-  createTime: Date;
-
-  @UpdateDateColumn({ type: 'timestamp', nullable: true })
-  updateTime: Date;
-
-  // 软删除
-  @Column({
-    default: false,
-    select: false,
-  })
-  isDelete: boolean;
 }

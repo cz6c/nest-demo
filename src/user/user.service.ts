@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserVO, UserListVO, UserListParamsDto } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -24,10 +25,10 @@ export class UserService {
   }
 
   // 列表
-  async findAll(query: any) {
+  async findAll(query: UserListParamsDto): Promise<UserListVO> {
     const qb = this.userRepository.createQueryBuilder('user');
-    qb.where('user.username = :username', { username: query.username });
-    qb.orderBy('user.create_time', 'DESC');
+    qb.where('user.nickname = :nickname', { nickname: query.nickname });
+    qb.orderBy('user.createTime', 'DESC');
 
     const total = await qb.getCount();
     const { page = 1, limit = 10 } = query;
@@ -39,7 +40,7 @@ export class UserService {
   }
 
   // 详情
-  async findOne(id: number) {
+  async findOne(id: number): Promise<UserVO> {
     const item = await this.userRepository.findOne({ where: { id } });
     if (!item) {
       throw new HttpException(`id为${id}的数据不存在`, 401);

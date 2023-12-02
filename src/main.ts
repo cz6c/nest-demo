@@ -8,13 +8,20 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // 注册全局错误的过滤器
+  // 注册全局过滤器
   app.useGlobalFilters(new HttpExceptionFilter());
+
   // 注册全局拦截器
   app.useGlobalInterceptors(new TransformInterceptor());
 
-  // 注册全局管道  并使用类验证器  配合 class-validator  class-transformer 进行表单验证
-  app.useGlobalPipes(new ValidationPipe());
+  // 注册全局管道
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // 当设置为 true 时，这将自动删除非白名单属性(在验证类中没有任何修饰符的属性)。提示：如果没有其他装饰器适合您的属性，请使用 @Allow 装饰器。
+      transform: true, // 当设置为 true 时，class-transformer 将尝试根据 TS 反映的类型进行转换
+      transformOptions: { enableImplicitConversion: true },
+    }),
+  );
 
   // 设置swagger文档
   const config = new DocumentBuilder()
