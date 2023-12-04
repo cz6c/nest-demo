@@ -4,7 +4,7 @@ import { Injectable, HttpException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 
 @Injectable()
-export class LocalStrategy extends PassportStrategy(Strategy) {
+export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
   constructor(private readonly userService: UserService) {
     super();
   }

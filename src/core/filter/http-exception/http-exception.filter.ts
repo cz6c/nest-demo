@@ -16,17 +16,16 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const exceptionResponse = exception.getResponse();
     let validatorMessage = '';
     if (typeof exceptionResponse === 'object') {
-      validatorMessage = (exceptionResponse as { message: string[] })
-        .message[0];
+      const { message } = exceptionResponse as { message: string[] | string };
+      validatorMessage = Array.isArray(message) ? message[0] : message;
     }
-    // console.log(exceptionResponse, validatorMessage);
+    console.log(exceptionResponse, validatorMessage);
 
-    const message = exception.message
-      ? exception.message
-      : `${status >= 500 ? 'Service Error' : 'Client Error'}`;
     const errorResponse = {
       data: null,
-      message: validatorMessage || message,
+      message:
+        validatorMessage ||
+        `${status >= 500 ? 'Service Error' : 'Client Error'}`,
       code: -1,
     };
 

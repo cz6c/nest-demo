@@ -1,16 +1,24 @@
 import { Controller, Get, Post, Body, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiOkResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserVO, UserListVO, UserListParamsDto } from './dto/user.dto';
 import { IdDto } from '@/common/common.dto';
+import { Public } from '@/decorator/public-auth.decorator';
 
 @ApiTags('用户管理')
+@ApiBearerAuth()
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Public()
   @ApiOperation({ summary: '创建' })
   @Post('register')
   create(@Body() createUserDto: CreateUserDto) {
