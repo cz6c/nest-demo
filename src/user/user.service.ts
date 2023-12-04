@@ -69,4 +69,13 @@ export class UserService {
     item.isDelete = true;
     return this.userRepository.save(item);
   }
+
+  // 通过账号查询密码
+  async findByUsername(username: string) {
+    const item = await this.userRepository.findOne({
+      where: { username },
+      select: ['password', 'username', 'id'],
+    });
+    return item;
+  }
 }

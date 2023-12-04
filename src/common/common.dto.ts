@@ -34,14 +34,11 @@ export class CommonVO {
   @ApiPropertyOptional({ description: 'id' })
   readonly id: number;
 
-  // @ApiPropertyOptional({ description: '创建时间' })
-  // readonly createTime: Date;
+  @ApiPropertyOptional({ description: '创建时间' })
+  readonly createTime: Date;
 
-  // @ApiPropertyOptional({ description: '更新时间' })
-  // readonly updateTime: Date;
-
-  // @ApiPropertyOptional({ description: '是否删除' })
-  // readonly isDelete: boolean;
+  @ApiPropertyOptional({ description: '更新时间' })
+  readonly updateTime: Date;
 }
 
 /**
