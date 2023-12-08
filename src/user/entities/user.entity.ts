@@ -1,5 +1,6 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { CommonEntity } from '@/common/common.entity';
+import { ArticleEntity } from '@/modules/article/entities/article.entity';
 
 @Entity('user')
 export class UserEntity extends CommonEntity {
@@ -14,4 +15,7 @@ export class UserEntity extends CommonEntity {
 
   @Column({ nullable: true })
   avatar: string;
+
+  @OneToMany(() => ArticleEntity, (article) => article.author)
+  articles: ArticleEntity[];
 }

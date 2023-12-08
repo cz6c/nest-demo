@@ -14,12 +14,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     // 设置错误信息
     const exceptionResponse = exception.getResponse();
-    let validatorMessage = '';
+    let validatorMessage = exceptionResponse;
     if (typeof exceptionResponse === 'object') {
       const { message } = exceptionResponse as { message: string[] | string };
       validatorMessage = Array.isArray(message) ? message[0] : message;
     }
-    console.log(exceptionResponse, validatorMessage);
+    console.log(exceptionResponse, 'exceptionResponse');
+    console.log(validatorMessage, 'validatorMessage');
 
     const errorResponse = {
       data: null,

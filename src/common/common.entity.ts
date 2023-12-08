@@ -19,9 +19,6 @@ export abstract class CommonEntity {
   updateTime: Date;
 
   // 软删除
-  @Column({
-    default: false,
-    select: false,
-  })
+  @Column({ default: false })
   isDelete: boolean;
 }

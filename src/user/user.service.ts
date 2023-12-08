@@ -1,10 +1,10 @@
 import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserVO, UserListVO, UserListParamsDto } from './dto/user.dto';
+import { UserVO, UserListVO, UserListParamsDto } from './dto/index.dto';
 
 @Injectable()
 export class UserService {
@@ -16,34 +16,39 @@ export class UserService {
   // 创建
   async create(data: CreateUserDto) {
     const { username } = data;
-    const item = await this.userRepository.findOne({ where: { username } });
+    const item = await this.userRepository.findOne({
+      where: { username, isDelete: false },
+    });
     if (item) {
-      throw new HttpException(`${username}已存在`, 401);
+      throw new HttpException(`${username}已存在`, 200);
     }
-    const newItem = await this.userRepository.create(data);
+    const newItem = this.userRepository.create(data);
     return await this.userRepository.save(newItem);
   }
 
   // 列表
   async findAll(query: UserListParamsDto): Promise<UserListVO> {
-    const qb = this.userRepository.createQueryBuilder('user');
-    qb.where('user.nickname = :nickname', { nickname: query.nickname });
-    qb.orderBy('user.createTime', 'DESC');
-
-    const total = await qb.getCount();
-    const { page = 1, limit = 10 } = query;
-    qb.limit(limit);
-    qb.offset(limit * (page - 1));
-
-    const list = await qb.getMany();
+    const { nickname, page = 1, limit = 10 } = query;
+    const where: Record<string, any> = { isDelete: false };
+    if (nickname) {
+      where.nickname = Like(`%${nickname}%`);
+    }
+    const [list, total] = await this.userRepository.findAndCount({
+      where,
+      order: { updateTime: 'DESC' },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
     return { list, page, limit, total };
   }
 
   // 详情
   async findOne(id: number): Promise<UserVO> {
-    const item = await this.userRepository.findOne({ where: { id } });
+    const item = await this.userRepository.findOne({
+      where: { id, isDelete: false },
+    });
     if (!item) {
-      throw new HttpException(`id为${id}的数据不存在`, 401);
+      throw new HttpException(`id为${id}的数据不存在`, 200);
     }
     return item;
   }
@@ -51,9 +56,11 @@ export class UserService {
   // 更新
   async update(data: UpdateUserDto) {
     const { id } = data;
-    const item = await this.userRepository.findOne({ where: { id } });
+    const item = await this.userRepository.findOne({
+      where: { id, isDelete: false },
+    });
     if (!item) {
-      throw new HttpException(`id为${id}的数据不存在`, 401);
+      throw new HttpException(`id为${id}的数据不存在`, 200);
     }
     const updateItem = this.userRepository.merge(item, data);
     return this.userRepository.save(updateItem);
@@ -61,7 +68,9 @@ export class UserService {
 
   // 刪除
   async remove(id: number) {
-    const item = await this.userRepository.findOne({ where: { id } });
+    const item = await this.userRepository.findOne({
+      where: { id, isDelete: false },
+    });
     if (!item) {
       throw new HttpException(`id为${id}的数据不存在`, 400);
     }
@@ -73,7 +82,7 @@ export class UserService {
   // 通过账号查询密码
   async findByUsername(username: string) {
     const item = await this.userRepository.findOne({
-      where: { username },
+      where: { username, isDelete: false },
       select: ['password', 'username', 'id'],
     });
     return item;

@@ -6,6 +6,9 @@ import { ConfigService, ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { UploadModule } from './upload/upload.module';
+import { ArticleModule } from './modules/article/article.module';
+import { CategoryModule } from './modules/category/category.module';
+import { TagModule } from './modules/tag/tag.module';
 import envConfig from '../config/env';
 
 @Module({
@@ -33,6 +36,9 @@ import envConfig from '../config/env';
     UserModule,
     AuthModule,
     UploadModule,
+    ArticleModule,
+    CategoryModule,
+    TagModule,
   ],
   controllers: [AppController],
   providers: [AppService],

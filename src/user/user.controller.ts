@@ -8,7 +8,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserVO, UserListVO, UserListParamsDto } from './dto/user.dto';
+import { UserVO, UserListVO, UserListParamsDto } from './dto/index.dto';
 import { IdDto } from '@/common/common.dto';
 import { Public } from '@/decorator/public-auth.decorator';
 
