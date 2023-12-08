@@ -1,4 +1,4 @@
-import { IsOptional, IsNotEmpty } from 'class-validator';
+import { IsOptional, IsDate, IsString, IsNotEmpty } from 'class-validator';
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -10,12 +10,13 @@ import { IdDto } from '@/common/common.dto';
 // 新增
 export class CreateMemorialDayDto {
   @ApiProperty({ description: '标题' })
+  @IsString()
   @IsNotEmpty()
   readonly title: string;
 
   @ApiProperty({ description: '日期' })
-  @IsNotEmpty()
-  readonly eventDate: string;
+  @IsDate()
+  readonly eventDate: Date;
 }
 
 // 更新
@@ -29,8 +30,8 @@ export class MemorialDayVO extends CommonVO {
   @ApiPropertyOptional({ description: '标题' })
   readonly title: string;
 
-  @ApiPropertyOptional({ description: '经度' })
-  readonly eventDate: string;
+  @ApiPropertyOptional({ description: '日期' })
+  readonly eventDate: Date;
 }
 
 // 列表
@@ -43,6 +44,6 @@ export class MemorialDayListVO extends PaginationVO {
 export class MemorialDayListParamsDto extends PaginationDto {
   @ApiPropertyOptional({ description: '标题' })
   @IsOptional()
-  @IsNotEmpty()
+  @IsString()
   readonly title: string;
 }

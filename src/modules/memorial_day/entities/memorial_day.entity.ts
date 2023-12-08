@@ -8,7 +8,7 @@ export class MemorialDayEntity extends CommonEntity {
   title: string;
 
   @Column({ type: 'timestamp', nullable: true })
-  eventDate: string;
+  eventDate: Date;
 
   @ManyToOne(() => FollowEntity, (entity) => entity.memorialDays)
   follow: FollowEntity;

@@ -1,4 +1,4 @@
-import { IsOptional, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -9,6 +9,7 @@ import { IdDto } from '@/common/common.dto';
 
 export class CreateTagDto {
   @ApiProperty({ description: '名称' })
+  @IsString()
   @IsNotEmpty()
   readonly name: string;
 }
@@ -30,6 +31,6 @@ export class TagListVO extends PaginationVO {
 export class TagListParamsDto extends PaginationDto {
   @ApiPropertyOptional({ description: '名称' })
   @IsOptional()
-  @IsNotEmpty()
+  @IsString()
   readonly name: string;
 }

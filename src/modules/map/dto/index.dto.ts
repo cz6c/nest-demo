@@ -1,4 +1,10 @@
-import { IsOptional, IsNotEmpty } from 'class-validator';
+import {
+  IsOptional,
+  IsLongitude,
+  IsLatitude,
+  IsString,
+  IsNotEmpty,
+} from 'class-validator';
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -11,18 +17,22 @@ import { MapRecordEntity } from '@/modules/map_record/entities/map_record.entity
 // 新增
 export class CreateMapDto {
   @ApiProperty({ description: '标题' })
+  @IsString()
   @IsNotEmpty()
   readonly title: string;
 
   @ApiProperty({ description: '经度' })
+  @IsLongitude()
   @IsNotEmpty()
   readonly lng: string;
 
   @ApiProperty({ description: '纬度' })
+  @IsLatitude()
   @IsNotEmpty()
   readonly lat: string;
 
   @ApiProperty({ description: '地址' })
+  @IsString()
   @IsNotEmpty()
   readonly address: string;
 }
@@ -58,6 +68,6 @@ export class MapListVO extends PaginationVO {
 export class MapListParamsDto extends PaginationDto {
   @ApiPropertyOptional({ description: '标题' })
   @IsOptional()
-  @IsNotEmpty()
+  @IsString()
   readonly title: string;
 }

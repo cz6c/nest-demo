@@ -1,4 +1,4 @@
-import { IsOptional, IsNotEmpty, IsPositive } from 'class-validator';
+import { IsOptional, IsPositive, IsInt } from 'class-validator';
 import { ApiPropertyOptional, ApiProperty } from '@nestjs/swagger';
 
 /**
@@ -8,11 +8,13 @@ export class PaginationDto {
   @ApiPropertyOptional({ description: '页数' })
   @IsOptional()
   @IsPositive()
+  @IsInt()
   readonly page: number;
 
   @ApiPropertyOptional({ description: '页码' })
   @IsOptional()
   @IsPositive()
+  @IsInt()
   readonly limit: number;
 }
 
@@ -46,7 +48,7 @@ export class CommonVO {
  */
 export class IdDto {
   @ApiProperty({ description: 'id' })
-  @IsNotEmpty()
   @IsPositive()
+  @IsInt()
   readonly id: number;
 }

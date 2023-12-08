@@ -1,9 +1,10 @@
 import {
   IsOptional,
-  IsNotEmpty,
   IsArray,
-  IsNumber,
-  Allow,
+  IsString,
+  IsPositive,
+  IsInt,
+  IsNotEmpty,
 } from 'class-validator';
 import {
   ApiProperty,
@@ -16,26 +17,27 @@ import { IdDto } from '@/common/common.dto';
 
 export class CreateArticleDto {
   @ApiProperty({ description: '标题' })
+  @IsString()
   @IsNotEmpty()
   readonly title: string;
 
   @ApiPropertyOptional({ description: '封面图' })
-  @Allow()
+  @IsString()
   readonly coverUrl: string;
 
   @ApiPropertyOptional({ description: '内容' })
-  @Allow()
+  @IsString()
   readonly htmlContent: string;
 
   @ApiProperty({ description: '分类id' })
-  @IsNotEmpty()
-  @IsNumber()
+  @IsPositive()
+  @IsInt()
   readonly categoryId: number;
 
   @ApiProperty({ type: [Number], description: '标签ids' })
-  @IsNotEmpty()
   @IsArray()
-  @IsNumber({}, { each: true })
+  @IsPositive({ each: true })
+  @IsInt({ each: true })
   readonly tagIds: number[];
 }
 
@@ -80,6 +82,6 @@ export class ArticleListVO extends PaginationVO {
 export class ArticleListParamsDto extends PaginationDto {
   @ApiPropertyOptional({ description: '标题' })
   @IsOptional()
-  @IsNotEmpty()
+  @IsString()
   readonly title: string;
 }

@@ -1,4 +1,4 @@
-import { IsOptional, IsNotEmpty, Allow } from 'class-validator';
+import { IsOptional, IsString, IsDate, IsNotEmpty } from 'class-validator';
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -9,10 +9,12 @@ import { PaginationDto, PaginationVO, CommonVO } from '@/common/common.dto';
 
 export class CreateUserDto {
   @ApiProperty({ description: '用户名' })
+  @IsString()
   @IsNotEmpty()
   readonly username: string;
 
   @ApiProperty({ description: '密码' })
+  @IsString()
   @IsNotEmpty()
   readonly password: string;
 }
@@ -21,16 +23,19 @@ export class UpdateUserDto extends OmitType(PartialType(CreateUserDto), [
   'username',
 ] as const) {
   @ApiPropertyOptional({ description: '头像' })
-  @Allow()
+  @IsOptional()
+  @IsString()
   readonly avatar: string;
 
   @ApiPropertyOptional({ description: '昵称' })
-  @Allow()
+  @IsOptional()
+  @IsString()
   readonly nickname: string;
 
   @ApiPropertyOptional({ description: '生日' })
-  @Allow()
-  readonly birthday: string;
+  @IsOptional()
+  @IsDate()
+  readonly birthday: Date;
 }
 
 export class UserVO extends CommonVO {
@@ -51,6 +56,6 @@ export class UserListVO extends PaginationVO {
 export class UserListParamsDto extends PaginationDto {
   @ApiPropertyOptional({ description: '昵称' })
   @IsOptional()
-  @IsNotEmpty()
+  @IsString()
   readonly nickname: string;
 }

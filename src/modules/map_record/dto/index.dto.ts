@@ -1,4 +1,4 @@
-import { Allow, IsNotEmpty, IsPositive } from 'class-validator';
+import { IsArray, IsDate, IsInt, IsPositive, IsString } from 'class-validator';
 import {
   ApiProperty,
   ApiPropertyOptional,
@@ -11,21 +11,22 @@ import { IdDto } from '@/common/common.dto';
 // 新增
 export class CreateMapRecordDto {
   @ApiProperty({ description: 'mapId' })
-  @IsNotEmpty()
   @IsPositive()
+  @IsInt()
   readonly mapId: number;
 
   @ApiPropertyOptional({ description: '描述' })
-  @Allow()
+  @IsString()
   readonly description: string;
 
   @ApiProperty({ description: '日期' })
-  @IsNotEmpty()
-  readonly eventDate: string;
+  @IsDate()
+  readonly eventDate: Date;
 
   @ApiProperty({ description: '图片数组' })
-  @IsNotEmpty()
-  readonly files: string;
+  @IsArray()
+  @IsString({ each: true })
+  readonly files: string[];
 }
 
 // 更新
@@ -40,8 +41,8 @@ export class MapRecordVO extends CommonVO {
   readonly description: string;
 
   @ApiPropertyOptional({ description: '日期' })
-  readonly eventDate: string;
+  readonly eventDate: Date;
 
   @ApiPropertyOptional({ description: '图片数组' })
-  readonly files: string;
+  readonly files: string[];
 }
