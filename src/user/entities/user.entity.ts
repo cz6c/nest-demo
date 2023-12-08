@@ -16,6 +16,9 @@ export class UserEntity extends CommonEntity {
   @Column({ nullable: true })
   avatar: string;
 
-  @OneToMany(() => ArticleEntity, (article) => article.author)
+  @Column({ type: 'timestamp', nullable: true })
+  birthday: Date;
+
+  @OneToMany(() => ArticleEntity, (entity) => entity.author)
   articles: ArticleEntity[];
 }

@@ -5,12 +5,16 @@ import { UserEntity } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserVO, UserListVO, UserListParamsDto } from './dto/index.dto';
+import { FollowEntity } from './entities/follow.entity';
+import { UserDto } from '@/auth/dto/auth.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(FollowEntity)
+    private readonly followRepository: Repository<FollowEntity>,
   ) {}
 
   // 创建
@@ -54,14 +58,11 @@ export class UserService {
   }
 
   // 更新
-  async update(data: UpdateUserDto) {
-    const { id } = data;
+  async update(data: UpdateUserDto, user: UserDto) {
+    const { id } = user;
     const item = await this.userRepository.findOne({
       where: { id, isDelete: false },
     });
-    if (!item) {
-      throw new HttpException(`id为${id}的数据不存在`, 200);
-    }
     const updateItem = this.userRepository.merge(item, data);
     return this.userRepository.save(updateItem);
   }
@@ -81,10 +82,49 @@ export class UserService {
 
   // 通过账号查询密码
   async findByUsername(username: string) {
-    const item = await this.userRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: { username, isDelete: false },
       select: ['password', 'username', 'id'],
     });
-    return item;
+    if (!user) {
+      throw new HttpException('用户名不正确！', 400);
+    }
+    const follow = await this.followRepository.findOne({
+      where: [
+        { fromUserId: user.id, isDelete: false },
+        { toUserId: user.id, isDelete: false },
+      ],
+    });
+    return { ...user, followId: follow.id ?? 0 };
+  }
+
+  // 绑定关系
+  async follow(id: number, user: UserDto) {
+    if (user.followId) {
+      throw new HttpException(`你已存在绑定关系`, 200);
+    }
+    if (id === user.id) {
+      throw new HttpException(`不能绑定自己`, 200);
+    }
+    const toUser = await this.userRepository.findOne({
+      where: { id, isDelete: false },
+    });
+    if (!toUser) {
+      throw new HttpException(`id为${id}的数据不存在`, 200);
+    }
+    const item = await this.followRepository.findOne({
+      where: [
+        { fromUserId: id, isDelete: false },
+        { toUserId: id, isDelete: false },
+      ],
+    });
+    if (item) {
+      throw new HttpException(`该用户已存在绑定关系`, 200);
+    }
+    const newItem = this.followRepository.create({
+      fromUserId: user.id,
+      toUserId: id,
+    });
+    return await this.followRepository.save(newItem);
   }
 }

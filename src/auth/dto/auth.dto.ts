@@ -15,4 +15,5 @@ export class LoginDto {
 export class UserDto {
   readonly id: number;
   readonly username: string;
+  readonly followId: number;
 }

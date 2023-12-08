@@ -9,6 +9,9 @@ import { UploadModule } from './upload/upload.module';
 import { ArticleModule } from './modules/article/article.module';
 import { CategoryModule } from './modules/category/category.module';
 import { TagModule } from './modules/tag/tag.module';
+import { MapModule } from './modules/map/map.module';
+import { MemorialDayModule } from './modules/memorial_day/memorial_day.module';
+import { MapRecordModule } from './modules/map_record/map_record.module';
 import envConfig from '../config/env';
 
 @Module({
@@ -39,6 +42,9 @@ import envConfig from '../config/env';
     ArticleModule,
     CategoryModule,
     TagModule,
+    MapModule,
+    MemorialDayModule,
+    MapRecordModule,
   ],
   controllers: [AppController],
   providers: [AppService],

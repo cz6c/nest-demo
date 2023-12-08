@@ -4,6 +4,7 @@ import { HttpExceptionFilter } from './core/filter/http-exception/http-exception
 import { TransformInterceptor } from './core/interceptor/transform/transform.interceptor';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -33,6 +34,10 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 
-  await app.listen(3000);
+  // 获取端口号
+  const configService = app.get(ConfigService);
+  const port = configService.get('PORT', 3000);
+
+  await app.listen(port);
 }
 bootstrap();

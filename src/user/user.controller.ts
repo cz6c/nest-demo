@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Req } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -11,6 +11,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UserVO, UserListVO, UserListParamsDto } from './dto/index.dto';
 import { IdDto } from '@/common/common.dto';
 import { Public } from '@/decorator/public-auth.decorator';
+import { Request } from 'express';
+import { UserDto } from '@/auth/dto/auth.dto';
 
 @ApiTags('用户管理')
 @ApiBearerAuth()
@@ -35,19 +37,26 @@ export class UserController {
   @ApiOperation({ summary: '详情' })
   @ApiOkResponse({ type: UserVO })
   @Get('info')
-  async findOne(@Query() params: IdDto) {
-    return await this.userService.findOne(params.id);
+  async findOne(@Req() req: Request) {
+    const user = req.user as UserDto;
+    return await this.userService.findOne(user.id);
   }
 
   @ApiOperation({ summary: '更新' })
   @Post('update')
-  async update(@Body() data: UpdateUserDto) {
-    return await this.userService.update(data);
+  async update(@Body() data: UpdateUserDto, @Req() req: Request) {
+    return await this.userService.update(data, req.user as UserDto);
   }
 
   @ApiOperation({ summary: '删除' })
   @Post('delete')
   async remove(@Body() data: IdDto) {
     return await this.userService.remove(data.id);
+  }
+
+  @ApiOperation({ summary: '绑定关系' })
+  @Get('follow')
+  async follow(@Query() params: IdDto, @Req() req: Request) {
+    return await this.userService.follow(params.id, req.user as UserDto);
   }
 }

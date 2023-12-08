@@ -15,9 +15,6 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
 
     console.log('user', user);
 
-    if (!user) {
-      throw new HttpException('用户名不正确！', 400);
-    }
     if (password !== user.password) {
       throw new HttpException('密码错误！', 400);
     }
