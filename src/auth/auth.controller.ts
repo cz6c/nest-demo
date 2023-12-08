@@ -7,6 +7,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Public } from '@/decorator/public-auth.decorator';
 import { UserDto } from './dto/auth.dto';
 
+@ApiBearerAuth()
 @ApiTags('验证')
 @Controller('auth')
 export class AuthController {
@@ -20,7 +21,6 @@ export class AuthController {
     return await this.authService.login(req.user as UserDto);
   }
 
-  @ApiBearerAuth()
   @Get('test')
   async test(@Req() req: Request) {
     return req.user;

@@ -1,7 +1,48 @@
-import { IsOptional, IsNotEmpty } from 'class-validator';
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsOptional,
+  IsNotEmpty,
+  IsArray,
+  IsNumber,
+  Allow,
+} from 'class-validator';
+import {
+  ApiProperty,
+  ApiPropertyOptional,
+  IntersectionType,
+} from '@nestjs/swagger';
 import { PaginationDto, PaginationVO, CommonVO } from '@/common/common.dto';
 import { TagVO } from '@/modules/tag/dto/index.dto';
+import { IdDto } from '@/common/common.dto';
+
+export class CreateArticleDto {
+  @ApiProperty({ description: '标题' })
+  @IsNotEmpty()
+  readonly title: string;
+
+  @ApiPropertyOptional({ description: '封面图' })
+  @Allow()
+  readonly coverUrl: string;
+
+  @ApiPropertyOptional({ description: '内容' })
+  @Allow()
+  readonly htmlContent: string;
+
+  @ApiProperty({ description: '分类id' })
+  @IsNotEmpty()
+  @IsNumber()
+  readonly categoryId: number;
+
+  @ApiProperty({ type: [Number], description: '标签ids' })
+  @IsNotEmpty()
+  @IsArray()
+  @IsNumber({}, { each: true })
+  readonly tagIds: number[];
+}
+
+export class UpdateArticleDto extends IntersectionType(
+  IdDto,
+  CreateArticleDto,
+) {}
 
 export class ArticleVO extends CommonVO {
   @ApiPropertyOptional({ description: '标题' })

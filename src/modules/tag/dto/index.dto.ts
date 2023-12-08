@@ -1,6 +1,19 @@
 import { IsOptional, IsNotEmpty } from 'class-validator';
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  ApiProperty,
+  ApiPropertyOptional,
+  IntersectionType,
+} from '@nestjs/swagger';
 import { PaginationDto, PaginationVO, CommonVO } from '@/common/common.dto';
+import { IdDto } from '@/common/common.dto';
+
+export class CreateTagDto {
+  @ApiProperty({ description: '名称' })
+  @IsNotEmpty()
+  readonly name: string;
+}
+
+export class UpdateTagDto extends IntersectionType(IdDto, CreateTagDto) {}
 
 export class TagVO extends CommonVO {
   @ApiPropertyOptional({ description: '名称' })

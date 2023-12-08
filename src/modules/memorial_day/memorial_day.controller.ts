@@ -19,7 +19,7 @@ import { UserDto } from '@/auth/dto/auth.dto';
 
 @ApiTags('纪念日管理')
 @ApiBearerAuth()
-@Controller('memorial_day')
+@Controller('memorialDay')
 export class MemorialDayController {
   constructor(private readonly memorial_dayService: MemorialDayService) {}
 

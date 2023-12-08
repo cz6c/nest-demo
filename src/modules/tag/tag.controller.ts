@@ -6,9 +6,13 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { TagService } from './tag.service';
-import { CreateTagDto } from './dto/create-tag.dto';
-import { UpdateTagDto } from './dto/update-tag.dto';
-import { TagVO, TagListVO, TagListParamsDto } from './dto/index.dto';
+import {
+  CreateTagDto,
+  UpdateTagDto,
+  TagVO,
+  TagListVO,
+  TagListParamsDto,
+} from './dto/index.dto';
 import { IdDto } from '@/common/common.dto';
 
 @ApiTags('文章标签管理')

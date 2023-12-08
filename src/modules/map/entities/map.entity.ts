@@ -5,16 +5,16 @@ import { MapRecordEntity } from '@/modules/map_record/entities/map_record.entity
 
 @Entity('map')
 export class MapEntity extends CommonEntity {
-  @Column({ nullable: true })
+  @Column()
   title: string;
 
-  @Column({ nullable: true })
+  @Column()
   lng: string;
 
-  @Column({ nullable: true })
+  @Column()
   lat: string;
 
-  @Column({ nullable: true })
+  @Column()
   address: string;
 
   @ManyToOne(() => FollowEntity, (entity) => entity.maps)

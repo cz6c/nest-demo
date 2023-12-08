@@ -2,9 +2,13 @@ import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UserVO, UserListVO, UserListParamsDto } from './dto/index.dto';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  UserVO,
+  UserListVO,
+  UserListParamsDto,
+} from './dto/index.dto';
 import { FollowEntity } from './entities/follow.entity';
 import { UserDto } from '@/auth/dto/auth.dto';
 

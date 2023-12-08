@@ -2,9 +2,9 @@ import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { ArticleEntity } from './entities/article.entity';
-import { CreateArticleDto } from './dto/create-article.dto';
-import { UpdateArticleDto } from './dto/update-article.dto';
 import {
+  CreateArticleDto,
+  UpdateArticleDto,
   ArticleVO,
   ArticleListVO,
   ArticleListParamsDto,
@@ -44,7 +44,7 @@ export class ArticleService {
       ...data,
       category: categoryDoc,
       tags: tagDocs,
-      author: user,
+      author: { id: user.id },
     });
     return await this.articleRepository.save(newItem);
   }

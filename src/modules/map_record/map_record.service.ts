@@ -7,17 +7,26 @@ import {
   UpdateMapRecordDto,
   MapRecordVO,
 } from './dto/index.dto';
+import { MapEntity } from '@/modules/map/entities/map.entity';
 
 @Injectable()
 export class MapRecordService {
   constructor(
     @InjectRepository(MapRecordEntity)
     private readonly memorialDayRepository: Repository<MapRecordEntity>,
+    @InjectRepository(MapEntity)
+    private readonly mapRepository: Repository<MapEntity>,
   ) {}
 
   // 创建
   async create(data: CreateMapRecordDto) {
     const { mapId } = data;
+    const item = await this.mapRepository.findOne({
+      where: { id: mapId, isDelete: false },
+    });
+    if (!item) {
+      throw new HttpException(`mapId为${mapId}的数据不存在`, 200);
+    }
     const newItem = this.memorialDayRepository.create({
       ...data,
       map: { id: mapId },

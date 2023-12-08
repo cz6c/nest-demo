@@ -15,7 +15,7 @@ import { IdDto } from '@/common/common.dto';
 
 @ApiTags('足迹管理')
 @ApiBearerAuth()
-@Controller('map_record')
+@Controller('mapRecord')
 export class MapRecordController {
   constructor(private readonly map_recordService: MapRecordService) {}
 
