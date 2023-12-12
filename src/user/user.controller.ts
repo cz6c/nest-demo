@@ -12,6 +12,7 @@ import {
   UserVO,
   UserListVO,
   UserListParamsDto,
+  UpdateFollowDto,
 } from './dto/index.dto';
 import { IdDto } from '@/common/common.dto';
 import { Public } from '@/decorator/public-auth.decorator';
@@ -62,5 +63,17 @@ export class UserController {
   @Get('follow')
   async follow(@Query() params: IdDto, @Req() req: Request) {
     return await this.userService.follow(params.id, req.user as UserDto);
+  }
+
+  @ApiOperation({ summary: '获取绑定信息' })
+  @Get('getFollow')
+  async getFollow(@Req() req: Request) {
+    return await this.userService.getFollow(req.user as UserDto);
+  }
+
+  @ApiOperation({ summary: '更新绑定信息' })
+  @Post('updateFollow')
+  async updateFollow(@Body() data: UpdateFollowDto, @Req() req: Request) {
+    return await this.userService.updateFollow(data, req.user as UserDto);
   }
 }

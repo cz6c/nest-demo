@@ -8,6 +8,7 @@ import {
   UserVO,
   UserListVO,
   UserListParamsDto,
+  UpdateFollowDto,
 } from './dto/index.dto';
 import { FollowEntity } from './entities/follow.entity';
 import { UserDto } from '@/auth/dto/auth.dto';
@@ -88,18 +89,14 @@ export class UserService {
   async findByUsername(username: string) {
     const user = await this.userRepository.findOne({
       where: { username, isDelete: false },
-      select: ['password', 'username', 'id'],
+      relations: ['follow'],
+      select: ['password', 'id', 'follow'],
     });
     if (!user) {
       throw new HttpException('用户名不正确！', 400);
     }
-    const follow = await this.followRepository.findOne({
-      where: [
-        { fromUserId: user.id, isDelete: false },
-        { toUserId: user.id, isDelete: false },
-      ],
-    });
-    return { ...user, followId: follow.id ?? 0 };
+    const { password, id, follow } = user;
+    return { username, password, id, followId: follow?.id ?? 0 };
   }
 
   // 绑定关系
@@ -116,19 +113,38 @@ export class UserService {
     if (!toUser) {
       throw new HttpException(`id为${id}的数据不存在`, 200);
     }
-    const item = await this.followRepository.findOne({
-      where: [
-        { fromUserId: id, isDelete: false },
-        { toUserId: id, isDelete: false },
-      ],
+    const fromUser = await this.userRepository.findOne({
+      where: { id: user.id, isDelete: false },
     });
-    if (item) {
+    if (fromUser.follow?.id) {
       throw new HttpException(`该用户已存在绑定关系`, 200);
     }
     const newItem = this.followRepository.create({
-      fromUserId: user.id,
-      toUserId: id,
+      users: [toUser, fromUser],
     });
     return await this.followRepository.save(newItem);
+  }
+
+  // 获取绑定详情
+  async getFollow(user: UserDto): Promise<any> {
+    const { followId } = user;
+    const item = await this.followRepository.findOne({
+      where: { id: followId, isDelete: false },
+      relations: ['users'],
+    });
+    if (!item) {
+      throw new HttpException(`id为${followId}的数据不存在`, 200);
+    }
+    return item;
+  }
+
+  // 更新绑定信息
+  async updateFollow(params: UpdateFollowDto, user: UserDto) {
+    const { followId } = user;
+    const item = await this.followRepository.findOne({
+      where: { id: followId, isDelete: false },
+    });
+    const updateItem = this.followRepository.merge(item, params);
+    return this.followRepository.save(updateItem);
   }
 }

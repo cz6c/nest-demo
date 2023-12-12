@@ -59,3 +59,10 @@ export class UserListParamsDto extends PaginationDto {
   @IsString()
   readonly nickname: string;
 }
+
+export class UpdateFollowDto {
+  @ApiProperty({ description: '首页背景图' })
+  @IsString()
+  @IsNotEmpty()
+  readonly homeUrl: string;
+}
