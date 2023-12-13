@@ -10,6 +10,7 @@ import {
   CreateMapRecordDto,
   UpdateMapRecordDto,
   MapRecordVO,
+  MapRecordAllVO,
 } from './dto/index.dto';
 import { IdDto } from '@/common/common.dto';
 
@@ -23,6 +24,13 @@ export class MapRecordController {
   @Post('create')
   create(@Body() createUserDto: CreateMapRecordDto) {
     return this.map_recordService.create(createUserDto);
+  }
+
+  @ApiOperation({ summary: '列表' })
+  @ApiOkResponse({ type: MapRecordAllVO })
+  @Get('getAll')
+  async getAll(@Query('mapId') mapId: number) {
+    return await this.map_recordService.getAll(mapId);
   }
 
   @ApiOperation({ summary: '详情' })

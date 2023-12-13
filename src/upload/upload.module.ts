@@ -12,7 +12,7 @@ import * as fs from 'fs';
       useFactory: () => ({
         storage: diskStorage({
           destination: function (req, file, cb) {
-            const uploadDir = path.join(__dirname, `../uploads/`);
+            const uploadDir = path.join(__dirname, `../public/uploads/`);
             let fileDir = '';
             // 根据接口参数决定存储目录  append额外的参数必须在append文件之前，不然读不到
             switch (req.body.fileType) {
@@ -42,9 +42,9 @@ import * as fs from 'fs';
     }),
     ServeStaticModule.forRoot({
       // 静态文件目录
-      rootPath: path.join(__dirname, '..', 'uploads'),
+      rootPath: path.join(__dirname, '../public/'),
       // 访问静态文件路径
-      serveRoot: '/uploads',
+      serveRoot: '/',
     }),
   ],
   controllers: [UploadController],

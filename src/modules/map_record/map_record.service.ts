@@ -6,6 +6,7 @@ import {
   CreateMapRecordDto,
   UpdateMapRecordDto,
   MapRecordVO,
+  MapRecordAllVO,
 } from './dto/index.dto';
 import { MapEntity } from '@/modules/map/entities/map.entity';
 
@@ -32,6 +33,19 @@ export class MapRecordService {
       map: { id: mapId },
     });
     return await this.memorialDayRepository.save(newItem);
+  }
+
+  // 列表
+  async getAll(mapId: number): Promise<MapRecordAllVO> {
+    const where: Record<string, any> = {
+      isDelete: false,
+      map: { id: mapId },
+    };
+    const list = await this.memorialDayRepository.find({
+      where,
+      order: { updateTime: 'DESC' },
+    });
+    return { list };
   }
 
   // 详情

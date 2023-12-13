@@ -12,7 +12,6 @@ import {
 } from '@nestjs/swagger';
 import { PaginationDto, PaginationVO, CommonVO } from '@/common/common.dto';
 import { IdDto } from '@/common/common.dto';
-import { MapRecordEntity } from '@/modules/map_record/entities/map_record.entity';
 
 // 新增
 export class CreateMapDto {
@@ -53,9 +52,6 @@ export class MapVO extends CommonVO {
 
   @ApiPropertyOptional({ description: '地址' })
   readonly address: string;
-
-  @ApiPropertyOptional({ type: [MapRecordEntity], description: '足迹' })
-  mapRecords: MapRecordEntity[];
 }
 
 // 列表

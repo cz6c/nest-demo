@@ -17,7 +17,7 @@ export class UploadController {
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     // return file;
     const { path } = file;
-    const url = path.split('uploads')[1];
+    const url = path.split('public')[1].replace(/\\/g, '/');
     return { url };
   }
 }

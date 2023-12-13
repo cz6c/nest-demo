@@ -4,6 +4,7 @@ import {
   ApiOperation,
   ApiOkResponse,
   ApiBearerAuth,
+  PickType,
 } from '@nestjs/swagger';
 import { MapService } from './map.service';
 import {
@@ -30,12 +31,20 @@ export class MapController {
     return this.mapService.create(createUserDto, followId);
   }
 
-  @ApiOperation({ summary: '列表' })
+  @ApiOperation({ summary: '分页列表' })
   @ApiOkResponse({ type: MapListVO })
   @Get('list')
   async findAll(@Query() params: MapListParamsDto, @Req() req: Request) {
     const { followId } = req.user as UserDto;
     return await this.mapService.findAll(params, followId);
+  }
+
+  @ApiOperation({ summary: '列表' })
+  @ApiOkResponse({ type: PickType(MapListVO, ['list']) })
+  @Get('getAll')
+  async getAll(@Req() req: Request) {
+    const { followId } = req.user as UserDto;
+    return await this.mapService.getAll(followId);
   }
 
   @ApiOperation({ summary: '详情' })

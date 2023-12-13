@@ -46,3 +46,9 @@ export class MapRecordVO extends CommonVO {
   @ApiPropertyOptional({ description: '图片数组' })
   readonly files: string[];
 }
+
+// 列表
+export class MapRecordAllVO {
+  @ApiPropertyOptional({ type: [MapRecordVO], description: '列表' })
+  readonly list: MapRecordVO[];
+}

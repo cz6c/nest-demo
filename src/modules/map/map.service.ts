@@ -44,7 +44,6 @@ export class MapService {
       where.title = Like(`%${title}%`);
     }
     const [list, total] = await this.mapRepository.findAndCount({
-      relations: ['mapRecords'],
       where,
       order: { updateTime: 'DESC' },
       skip: (page - 1) * limit,
@@ -53,10 +52,22 @@ export class MapService {
     return { list, page, limit, total };
   }
 
+  // 列表
+  async getAll(followId: number): Promise<{ list: MapVO[] }> {
+    const where: Record<string, any> = {
+      isDelete: false,
+      follow: { id: followId },
+    };
+    const list = await this.mapRepository.find({
+      where,
+      order: { updateTime: 'DESC' },
+    });
+    return { list };
+  }
+
   // 详情
   async findOne(id: number): Promise<MapVO> {
     const item = await this.mapRepository.findOne({
-      relations: ['mapRecords'],
       where: { id, isDelete: false },
     });
     if (!item) {
