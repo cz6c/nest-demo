@@ -9,6 +9,9 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // 开启跨域资源共享
+  app.enableCors();
+
   // 注册全局过滤器
   app.useGlobalFilters(new HttpExceptionFilter());
 
