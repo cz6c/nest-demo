@@ -61,8 +61,26 @@ export class UserListParamsDto extends PaginationDto {
 }
 
 export class UpdateFollowDto {
-  @ApiProperty({ description: '首页背景图' })
+  @ApiPropertyOptional({ description: '首页背景图' })
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   readonly homeUrl: string;
+
+  @ApiPropertyOptional({ description: '开始日期' })
+  @IsOptional()
+  @IsDate()
+  @IsNotEmpty()
+  readonly startDate: Date;
+}
+
+export class FollowVo extends CommonVO {
+  @ApiPropertyOptional({ description: '首页背景图' })
+  readonly homeUrl: string;
+
+  @ApiPropertyOptional({ description: '开始日期' })
+  readonly startDate: Date;
+
+  @ApiPropertyOptional({ description: '用户组' })
+  readonly users: UserVO[];
 }

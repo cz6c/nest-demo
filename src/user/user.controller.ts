@@ -13,6 +13,7 @@ import {
   UserListVO,
   UserListParamsDto,
   UpdateFollowDto,
+  FollowVo,
 } from './dto/index.dto';
 import { IdDto } from '@/common/common.dto';
 import { Public } from '@/decorator/public-auth.decorator';
@@ -66,6 +67,7 @@ export class UserController {
   }
 
   @ApiOperation({ summary: '获取绑定信息' })
+  @ApiOkResponse({ type: FollowVo })
   @Get('getFollow')
   async getFollow(@Req() req: Request) {
     return await this.userService.getFollow(req.user as UserDto);

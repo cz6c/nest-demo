@@ -9,6 +9,7 @@ import {
   UserListVO,
   UserListParamsDto,
   UpdateFollowDto,
+  FollowVo,
 } from './dto/index.dto';
 import { FollowEntity } from './entities/follow.entity';
 import { UserDto } from '@/auth/dto/auth.dto';
@@ -126,7 +127,7 @@ export class UserService {
   }
 
   // 获取绑定详情
-  async getFollow(user: UserDto): Promise<any> {
+  async getFollow(user: UserDto): Promise<FollowVo> {
     const { followId } = user;
     const item = await this.followRepository.findOne({
       where: { id: followId, isDelete: false },

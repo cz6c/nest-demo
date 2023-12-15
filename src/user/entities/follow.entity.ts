@@ -9,6 +9,9 @@ export class FollowEntity extends CommonEntity {
   @Column({ nullable: true })
   homeUrl: string;
 
+  @Column({ type: 'timestamp', nullable: true })
+  startDate: Date;
+
   @OneToMany(() => MapEntity, (entity) => entity.follow)
   maps: MapEntity[];
 
