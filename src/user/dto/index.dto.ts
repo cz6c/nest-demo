@@ -44,6 +44,12 @@ export class UserVO extends CommonVO {
 
   @ApiPropertyOptional({ description: '昵称' })
   readonly nickname: string;
+
+  @ApiPropertyOptional({ description: '头像' })
+  readonly avatar: string;
+
+  @ApiPropertyOptional({ description: '生日' })
+  readonly birthday: Date;
 }
 
 // 列表

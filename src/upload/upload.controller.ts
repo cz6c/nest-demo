@@ -22,17 +22,16 @@ export class UploadController {
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    // return file;
-    // const { path } = file;
-    // const url = path.split('public')[1].replace(/\\/g, '/');
+    // const url = file.path.split('public')[1].replace(/\\/g, '/');
     // return { url };
+
     // 读取文件内容
     const fileContent = fs.readFileSync(file.path);
     // 计算文件内容的哈希值
     const hash = crypto.createHash('md5').update(fileContent).digest('hex');
     const extname = path.extname(file.originalname);
-    const key = `${hash}${extname}`;
-    console.log(key);
+    const isProd = process.env.NODE_ENV === 'production';
+    const key = isProd ? `${hash}${extname}` : `test/${hash}${extname}`;
     try {
       const url = await this.uploadService.uploadFile(file.path, key);
       fs.unlinkSync(file.path);

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as qiniu from 'qiniu';
 import { ConfigService } from '@nestjs/config';
+import { QINIU } from '#/index';
 
 @Injectable()
 export class UploadService {
@@ -9,10 +10,7 @@ export class UploadService {
   private bucketManager: qiniu.rs.BucketManager;
 
   constructor(private readonly configService: ConfigService) {
-    this.mac = new qiniu.auth.digest.Mac(
-      this.configService.get('QINIU_ACCESS_KEY'),
-      this.configService.get('QINIU_SECRET_KEY'),
-    );
+    this.mac = new qiniu.auth.digest.Mac(QINIU.ACCESS_KEY, QINIU.SECRET_KEY);
     this.config = new qiniu.conf.Config();
     this.bucketManager = new qiniu.rs.BucketManager(this.mac, this.config);
   }
@@ -20,7 +18,7 @@ export class UploadService {
   async uploadFile(localFilePath: string, key: string): Promise<string> {
     // get token
     const putPolicy = new qiniu.rs.PutPolicy({
-      scope: `${this.configService.get('QINIU_BUCKET_NAME')}:${key}`,
+      scope: `${QINIU.BUCKET_NAME}:${key}`,
     });
     const uploadToken = putPolicy.uploadToken(this.mac);
     // uoload
@@ -38,7 +36,7 @@ export class UploadService {
             reject(respErr);
           }
           if (respInfo.statusCode === 200) {
-            const url = this.pathToPrivateDownloadUrl(respBody.key);
+            const url = this.pathToDownloadUrl(respBody.key, false);
             resolve(url);
           } else {
             reject(respInfo);
@@ -48,20 +46,15 @@ export class UploadService {
     });
   }
 
-  // 文件的存储路径==>私有临时授权访问链接
-  pathToPrivateDownloadUrl(path: string) {
-    const deadline = Math.floor(Date.now() / 1000) + 3600; // 1小时过期
-    const privateDownloadUrl = this.bucketManager.privateDownloadUrl(
-      this.configService.get('QINIU_HOST'),
-      path,
-      deadline,
-    );
-    return privateDownloadUrl;
-  }
-
-  // 私有临时授权访问链接==>文件的存储路径
-  privateDownloadUrlToPath(url: string) {
-    const str = url.replace(this.configService.get('QINIU_HOST'), '');
-    return str.split('?')[1];
+  // 文件的存储路径==>访问链接
+  pathToDownloadUrl(path: string, isPrivate: boolean) {
+    let url = '';
+    if (isPrivate) {
+      const deadline = Math.floor(Date.now() / 1000) + 3600; // 1小时过期
+      url = this.bucketManager.privateDownloadUrl(QINIU.DOMAIN, path, deadline);
+    } else {
+      url = this.bucketManager.publicDownloadUrl(QINIU.DOMAIN, path);
+    }
+    return url;
   }
 }

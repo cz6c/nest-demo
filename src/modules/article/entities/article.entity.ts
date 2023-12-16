@@ -11,13 +11,23 @@ import { UserEntity } from '@/user/entities/user.entity';
 import { CategoryEntity } from '@/modules/category/entities/category.entity';
 import { TagEntity } from '@/modules/tag/entities/tag.entity';
 import { ArticleVO } from '../dto/index.dto';
+import { QINIU } from '#/index';
 
 @Entity('article')
 export class ArticleEntity extends CommonEntity {
   @Column()
   title: string;
 
-  @Column()
+  @Column({
+    transformer: {
+      to(value) {
+        return value.replace(QINIU.DOMAIN, '');
+      },
+      from(value) {
+        return `${QINIU.DOMAIN}${value}`;
+      },
+    },
+  })
   coverUrl: string;
 
   @Column()
