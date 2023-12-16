@@ -3,6 +3,7 @@ import { UploadController } from './upload.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { UploadService } from './upload.service';
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -21,9 +22,6 @@ import * as fs from 'fs';
                 break;
               case '2':
                 fileDir = 'homeImg';
-                break;
-              default:
-                fileDir = 'default';
                 break;
             }
             const dir = `${uploadDir}${fileDir}`;
@@ -48,5 +46,6 @@ import * as fs from 'fs';
     }),
   ],
   controllers: [UploadController],
+  providers: [UploadService],
 })
 export class UploadModule {}
