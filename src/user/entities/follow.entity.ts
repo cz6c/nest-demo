@@ -1,9 +1,9 @@
 import { Entity, Column, OneToMany } from 'typeorm';
 import { CommonEntity } from '@/common/common.entity';
-import { MapEntity } from '@/modules/map/entities/map.entity';
 import { MemorialDayEntity } from '@/modules/memorial_day/entities/memorial_day.entity';
 import { UserEntity } from './user.entity';
 import { QINIU } from '#/index';
+import { MapRecordEntity } from '@/modules/map_record/entities/map_record.entity';
 
 @Entity('follow')
 export class FollowEntity extends CommonEntity {
@@ -23,8 +23,8 @@ export class FollowEntity extends CommonEntity {
   @Column({ type: 'timestamp', nullable: true })
   startDate: Date;
 
-  @OneToMany(() => MapEntity, (entity) => entity.follow)
-  maps: MapEntity[];
+  @OneToMany(() => MapRecordEntity, (entity) => entity.follow)
+  mapRecords: MapRecordEntity[];
 
   @OneToMany(() => MemorialDayEntity, (entity) => entity.follow)
   memorialDays: MemorialDayEntity[];

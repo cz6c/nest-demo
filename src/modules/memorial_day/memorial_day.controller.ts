@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -14,8 +14,7 @@ import {
   MemorialDayListParamsDto,
 } from './dto/index.dto';
 import { IdDto } from '@/common/common.dto';
-import { Request } from 'express';
-import { UserDto } from '@/auth/dto/auth.dto';
+import { GetUser } from '@/decorator/getUser.decorator';
 
 @ApiTags('纪念日管理')
 @ApiBearerAuth()
@@ -25,8 +24,10 @@ export class MemorialDayController {
 
   @ApiOperation({ summary: '创建' })
   @Post('create')
-  create(@Body() createUserDto: CreateMemorialDayDto, @Req() req: Request) {
-    const { followId } = req.user as UserDto;
+  create(
+    @Body() createUserDto: CreateMemorialDayDto,
+    @GetUser('followId') followId: number,
+  ) {
     return this.memorial_dayService.create(createUserDto, followId);
   }
 
@@ -35,9 +36,8 @@ export class MemorialDayController {
   @Get('list')
   async findAll(
     @Query() params: MemorialDayListParamsDto,
-    @Req() req: Request,
+    @GetUser('followId') followId: number,
   ) {
-    const { followId } = req.user as UserDto;
     return await this.memorial_dayService.findAll(params, followId);
   }
 

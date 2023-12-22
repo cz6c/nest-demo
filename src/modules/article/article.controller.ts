@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -15,8 +15,7 @@ import {
 } from './dto/index.dto';
 import { IdDto } from '@/common/common.dto';
 import { Public } from '@/decorator/public-auth.decorator';
-import { Request } from 'express';
-import { UserDto } from '@/auth/dto/auth.dto';
+import { GetUser } from '@/decorator/getUser.decorator';
 
 @ApiTags('文章管理')
 @ApiBearerAuth()
@@ -26,8 +25,11 @@ export class ArticleController {
 
   @ApiOperation({ summary: '创建' })
   @Post('create')
-  create(@Body() createArticleDto: CreateArticleDto, @Req() req: Request) {
-    return this.articleService.create(createArticleDto, req.user as UserDto);
+  create(
+    @Body() createArticleDto: CreateArticleDto,
+    @GetUser('id') userId: number,
+  ) {
+    return this.articleService.create(createArticleDto, userId);
   }
 
   @Public()

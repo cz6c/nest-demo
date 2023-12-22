@@ -1,11 +1,11 @@
-import { Controller, Req, Post, UseGuards, Body, Get } from '@nestjs/common';
-import { Request } from 'express';
+import { Controller, Post, UseGuards, Body, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LoginDto } from './dto/auth.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Public } from '@/decorator/public-auth.decorator';
 import { UserDto } from './dto/auth.dto';
+import { GetUser } from '@/decorator/getUser.decorator';
 
 @ApiBearerAuth()
 @ApiTags('验证')
@@ -17,12 +17,12 @@ export class AuthController {
   @ApiOperation({ summary: '登录' })
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(@Body() user: LoginDto, @Req() req: Request) {
-    return await this.authService.login(req.user as UserDto);
+  async login(@Body() data: LoginDto, @GetUser() user: UserDto) {
+    return await this.authService.login(user);
   }
 
   @Get('test')
-  async test(@Req() req: Request) {
-    return req.user;
+  async test(@GetUser() user: UserDto) {
+    return user;
   }
 }

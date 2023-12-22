@@ -1,49 +1,63 @@
 import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { MapRecordEntity } from './entities/map_record.entity';
 import {
   CreateMapRecordDto,
   UpdateMapRecordDto,
   MapRecordVO,
   MapRecordAllVO,
+  MapRecordListParamsDto,
+  MapRecordListVO,
 } from './dto/index.dto';
-import { MapEntity } from '@/modules/map/entities/map.entity';
 
 @Injectable()
 export class MapRecordService {
   constructor(
     @InjectRepository(MapRecordEntity)
     private readonly memorialDayRepository: Repository<MapRecordEntity>,
-    @InjectRepository(MapEntity)
-    private readonly mapRepository: Repository<MapEntity>,
   ) {}
 
   // 创建
-  async create(data: CreateMapRecordDto) {
-    const { mapId } = data;
-    const item = await this.mapRepository.findOne({
-      where: { id: mapId, isDelete: false },
-    });
-    if (!item) {
-      throw new HttpException(`mapId为${mapId}的数据不存在`, 200);
-    }
+  async create(data: CreateMapRecordDto, followId: number) {
     const newItem = this.memorialDayRepository.create({
       ...data,
-      map: { id: mapId },
+      follow: { id: followId },
     });
     return await this.memorialDayRepository.save(newItem);
   }
 
-  // 列表
-  async getAll(mapId: number): Promise<MapRecordAllVO> {
+  // 分页列表
+  async findAll(
+    query: MapRecordListParamsDto,
+    followId: number,
+  ): Promise<MapRecordListVO> {
+    const { content, page = 1, limit = 10 } = query;
     const where: Record<string, any> = {
       isDelete: false,
-      map: { id: mapId },
+      follow: { id: followId },
+    };
+    if (content) {
+      where.content = Like(`%${content}%`);
+    }
+    const [list, total] = await this.memorialDayRepository.findAndCount({
+      where,
+      order: { eventDate: 'DESC' },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+    return { list, page, limit, total };
+  }
+
+  // 列表
+  async getAll(followId: number): Promise<MapRecordAllVO> {
+    const where: Record<string, any> = {
+      isDelete: false,
+      followId: { id: followId },
     };
     const list = await this.memorialDayRepository.find({
       where,
-      order: { updateTime: 'DESC' },
+      order: { eventDate: 'DESC' },
     });
     return { list };
   }

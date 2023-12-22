@@ -11,8 +11,11 @@ import {
   UpdateMapRecordDto,
   MapRecordVO,
   MapRecordAllVO,
+  MapRecordListVO,
+  MapRecordListParamsDto,
 } from './dto/index.dto';
 import { IdDto } from '@/common/common.dto';
+import { GetUser } from '@/decorator/getUser.decorator';
 
 @ApiTags('足迹管理')
 @ApiBearerAuth()
@@ -22,15 +25,28 @@ export class MapRecordController {
 
   @ApiOperation({ summary: '创建' })
   @Post('create')
-  create(@Body() createUserDto: CreateMapRecordDto) {
-    return this.map_recordService.create(createUserDto);
+  create(
+    @Body() createUserDto: CreateMapRecordDto,
+    @GetUser('followId') followId: number,
+  ) {
+    return this.map_recordService.create(createUserDto, followId);
+  }
+
+  @ApiOperation({ summary: '分页列表' })
+  @ApiOkResponse({ type: MapRecordListVO })
+  @Get('list')
+  async findAll(
+    @Query() params: MapRecordListParamsDto,
+    @GetUser('followId') followId: number,
+  ) {
+    return await this.map_recordService.findAll(params, followId);
   }
 
   @ApiOperation({ summary: '列表' })
   @ApiOkResponse({ type: MapRecordAllVO })
   @Get('getAll')
-  async getAll(@Query('mapId') mapId: number) {
-    return await this.map_recordService.getAll(mapId);
+  async getAll(@GetUser('followId') followId: number) {
+    return await this.map_recordService.getAll(followId);
   }
 
   @ApiOperation({ summary: '详情' })

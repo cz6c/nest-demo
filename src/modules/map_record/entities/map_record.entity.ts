@@ -1,15 +1,15 @@
 import { Entity, Column, ManyToOne } from 'typeorm';
 import { CommonEntity } from '@/common/common.entity';
-import { MapEntity } from '@/modules/map/entities/map.entity';
 import { QINIU } from '#/index';
+import { FollowEntity } from '@/user/entities/follow.entity';
 
 @Entity('map_record')
 export class MapRecordEntity extends CommonEntity {
+  @Column()
+  content: string;
+
   @Column({ type: 'timestamp', nullable: true })
   eventDate: Date;
-
-  @Column({ nullable: true })
-  description: string;
 
   @Column({
     type: 'simple-array',
@@ -25,6 +25,15 @@ export class MapRecordEntity extends CommonEntity {
   })
   files: string[];
 
-  @ManyToOne(() => MapEntity, (entity) => entity.mapRecords)
-  map: MapEntity;
+  @Column()
+  lng: string;
+
+  @Column()
+  lat: string;
+
+  @Column()
+  address: string;
+
+  @ManyToOne(() => FollowEntity, (entity) => entity.mapRecords)
+  follow: FollowEntity;
 }

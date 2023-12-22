@@ -11,7 +11,6 @@ import {
 } from './dto/index.dto';
 import { CategoryEntity } from '@/modules/category/entities/category.entity';
 import { TagEntity } from '@/modules/tag/entities/tag.entity';
-import { UserDto } from '@/auth/dto/auth.dto';
 
 @Injectable()
 export class ArticleService {
@@ -25,7 +24,7 @@ export class ArticleService {
   ) {}
 
   // 创建
-  async create(data: CreateArticleDto, user: UserDto) {
+  async create(data: CreateArticleDto, userId: number) {
     const { title, categoryId, tagIds } = data;
     const item = await this.articleRepository.findOne({
       where: { title, isDelete: false },
@@ -44,7 +43,7 @@ export class ArticleService {
       ...data,
       category: categoryDoc,
       tags: tagDocs,
-      author: { id: user.id },
+      author: { id: userId },
     });
     return await this.articleRepository.save(newItem);
   }

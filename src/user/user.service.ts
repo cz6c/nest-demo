@@ -64,8 +64,7 @@ export class UserService {
   }
 
   // 更新
-  async update(data: UpdateUserDto, user: UserDto) {
-    const { id } = user;
+  async update(data: UpdateUserDto, id: number) {
     const item = await this.userRepository.findOne({
       where: { id, isDelete: false },
     });
@@ -127,8 +126,7 @@ export class UserService {
   }
 
   // 获取绑定详情
-  async getFollow(user: UserDto): Promise<FollowVo> {
-    const { followId } = user;
+  async getFollow(followId: number): Promise<FollowVo> {
     const item = await this.followRepository.findOne({
       where: { id: followId, isDelete: false },
       relations: ['users'],
@@ -140,8 +138,7 @@ export class UserService {
   }
 
   // 更新绑定信息
-  async updateFollow(params: UpdateFollowDto, user: UserDto) {
-    const { followId } = user;
+  async updateFollow(params: UpdateFollowDto, followId: number) {
     const item = await this.followRepository.findOne({
       where: { id: followId, isDelete: false },
     });
