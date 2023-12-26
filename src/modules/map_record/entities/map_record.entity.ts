@@ -19,7 +19,7 @@ export class MapRecordEntity extends CommonEntity {
         return value.map((c: string) => c.replace(QINIU.DOMAIN, ''));
       },
       from(value) {
-        return value.map((c: string) => `${QINIU.DOMAIN}${c}`);
+        return value.map((c: string) => (c ? `${QINIU.DOMAIN}${c}` : ''));
       },
     },
   })

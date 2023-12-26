@@ -14,7 +14,7 @@ export class FollowEntity extends CommonEntity {
         return value.replace(QINIU.DOMAIN, '');
       },
       from(value) {
-        return `${QINIU.DOMAIN}${value}`;
+        return value ? `${QINIU.DOMAIN}${value}` : '';
       },
     },
   })
