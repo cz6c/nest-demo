@@ -6,7 +6,6 @@ import {
   CreateMapRecordDto,
   UpdateMapRecordDto,
   MapRecordVO,
-  MapRecordAllVO,
   MapRecordListParamsDto,
   MapRecordListVO,
 } from './dto/index.dto';
@@ -32,7 +31,7 @@ export class MapRecordService {
     query: MapRecordListParamsDto,
     followId: number,
   ): Promise<MapRecordListVO> {
-    const { content, page = 1, limit = 10 } = query;
+    const { content, page, limit } = query;
     const where: Record<string, any> = {
       isDelete: false,
       follow: { id: followId },
@@ -40,26 +39,15 @@ export class MapRecordService {
     if (content) {
       where.content = Like(`%${content}%`);
     }
+    const skip = (page && limit && (page - 1) * limit) ?? 0;
+    const take = limit ?? 0;
     const [list, total] = await this.memorialDayRepository.findAndCount({
       where,
       order: { eventDate: 'DESC' },
-      skip: (page - 1) * limit,
-      take: limit,
+      skip,
+      take,
     });
     return { list, page, limit, total };
-  }
-
-  // 列表
-  async getAll(followId: number): Promise<MapRecordAllVO> {
-    const where: Record<string, any> = {
-      isDelete: false,
-      followId: { id: followId },
-    };
-    const list = await this.memorialDayRepository.find({
-      where,
-      order: { eventDate: 'DESC' },
-    });
-    return { list };
   }
 
   // 详情

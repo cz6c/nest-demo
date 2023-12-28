@@ -32,16 +32,18 @@ export class CategoryService {
 
   // 列表
   async findAll(query: CategoryListParamsDto): Promise<CategoryListVO> {
-    const { name, page = 1, limit = 10 } = query;
+    const { name, page, limit } = query;
     const where: Record<string, any> = { isDelete: false };
     if (name) {
       where.name = Like(`%${name}%`);
     }
+    const skip = (page && limit && (page - 1) * limit) ?? 0;
+    const take = limit ?? 0;
     const [list, total] = await this.categoryRepository.findAndCount({
       where,
       order: { updateTime: 'DESC' },
-      skip: (page - 1) * limit,
-      take: limit,
+      skip,
+      take,
     });
     return { list, page, limit, total };
   }

@@ -69,17 +69,19 @@ export class ArticleService {
     // const list = arr.map((x) => x.entityToVo());
     // return { list, page, limit, total };
 
-    const { title, page = 1, limit = 10 } = query;
+    const { title, page, limit } = query;
     const where: Record<string, any> = { isDelete: false };
     if (title) {
       where.title = Like(`%${title}%`);
     }
+    const skip = (page && limit && (page - 1) * limit) ?? 0;
+    const take = limit ?? 0;
     const [list, total] = await this.articleRepository.findAndCount({
       relations: ['category', 'tags', 'author'], // 需链表查询的字段
       where,
       order: { updateTime: 'DESC' },
-      skip: (page - 1) * limit,
-      take: limit,
+      skip,
+      take,
     });
     return { list: list.map((x) => x.entityToVo()), page, limit, total };
   }

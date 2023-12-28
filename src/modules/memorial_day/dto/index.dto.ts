@@ -16,6 +16,7 @@ export class CreateMemorialDayDto {
 
   @ApiProperty({ description: '日期' })
   @IsDate()
+  @IsNotEmpty()
   readonly eventDate: Date;
 }
 

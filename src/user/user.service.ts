@@ -38,16 +38,18 @@ export class UserService {
 
   // 列表
   async findAll(query: UserListParamsDto): Promise<UserListVO> {
-    const { nickname, page = 1, limit = 10 } = query;
+    const { nickname, page, limit } = query;
     const where: Record<string, any> = { isDelete: false };
     if (nickname) {
       where.nickname = Like(`%${nickname}%`);
     }
+    const skip = (page && limit && (page - 1) * limit) ?? 0;
+    const take = limit ?? 0;
     const [list, total] = await this.userRepository.findAndCount({
       where,
       order: { updateTime: 'DESC' },
-      skip: (page - 1) * limit,
-      take: limit,
+      skip,
+      take,
     });
     return { list, page, limit, total };
   }

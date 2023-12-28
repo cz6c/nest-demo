@@ -5,7 +5,7 @@ import { FollowEntity } from '@/user/entities/follow.entity';
 
 @Entity('map_record')
 export class MapRecordEntity extends CommonEntity {
-  @Column()
+  @Column({ nullable: true })
   content: string;
 
   @Column({ type: 'timestamp', nullable: true })
@@ -19,19 +19,21 @@ export class MapRecordEntity extends CommonEntity {
         return value.map((c: string) => c.replace(QINIU.DOMAIN, ''));
       },
       from(value) {
-        return value.map((c: string) => (c ? `${QINIU.DOMAIN}${c}` : ''));
+        return value
+          ? value.map((c: string) => (c ? `${QINIU.DOMAIN}${c}` : ''))
+          : [];
       },
     },
   })
   files: string[];
 
-  @Column()
+  @Column({ nullable: true })
   lng: string;
 
-  @Column()
+  @Column({ nullable: true })
   lat: string;
 
-  @Column()
+  @Column({ nullable: true })
   address: string;
 
   @ManyToOne(() => FollowEntity, (entity) => entity.mapRecords)

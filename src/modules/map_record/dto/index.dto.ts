@@ -17,7 +17,7 @@ import { IdDto } from '@/common/common.dto';
 
 // 新增
 export class CreateMapRecordDto {
-  @ApiPropertyOptional({ description: '内容' })
+  @ApiProperty({ description: '内容' })
   @IsString()
   @IsNotEmpty()
   readonly content: string;
@@ -76,17 +76,11 @@ export class MapRecordVO extends CommonVO {
   readonly address: string;
 }
 
-// 列表
-export class MapRecordAllVO {
+// 分页列表
+export class MapRecordListVO extends PaginationVO {
   @ApiPropertyOptional({ type: [MapRecordVO], description: '列表' })
   readonly list: MapRecordVO[];
 }
-
-// 分页列表
-export class MapRecordListVO extends IntersectionType(
-  MapRecordAllVO,
-  PaginationVO,
-) {}
 
 // 列表查询
 export class MapRecordListParamsDto extends PaginationDto {

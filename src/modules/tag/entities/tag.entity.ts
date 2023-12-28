@@ -4,7 +4,7 @@ import { ArticleEntity } from '@/modules/article/entities/article.entity';
 
 @Entity('tag')
 export class TagEntity extends CommonEntity {
-  @Column()
+  @Column({ nullable: true })
   name: string;
 
   @OneToMany(() => ArticleEntity, (article) => article.tags)

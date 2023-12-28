@@ -15,10 +15,11 @@ import { QINIU } from '#/index';
 
 @Entity('article')
 export class ArticleEntity extends CommonEntity {
-  @Column()
+  @Column({ nullable: true })
   title: string;
 
   @Column({
+    nullable: true,
     transformer: {
       to(value) {
         return value.replace(QINIU.DOMAIN, '');
@@ -30,7 +31,7 @@ export class ArticleEntity extends CommonEntity {
   })
   coverUrl: string;
 
-  @Column()
+  @Column({ nullable: true })
   htmlContent: string;
 
   @ManyToOne(() => UserEntity, (user) => user.articles)

@@ -38,7 +38,7 @@ export class MemorialDayService {
     query: MemorialDayListParamsDto,
     followId: number,
   ): Promise<MemorialDayListVO> {
-    const { title, page = 1, limit = 10 } = query;
+    const { title, page, limit } = query;
     const where: Record<string, any> = {
       isDelete: false,
       follow: { id: followId },
@@ -46,11 +46,13 @@ export class MemorialDayService {
     if (title) {
       where.title = Like(`%${title}%`);
     }
+    const skip = (page && limit && (page - 1) * limit) ?? 0;
+    const take = limit ?? 0;
     const [list, total] = await this.memorialDayRepository.findAndCount({
       where,
-      order: { updateTime: 'DESC' },
-      skip: (page - 1) * limit,
-      take: limit,
+      order: { eventDate: 'DESC' },
+      skip,
+      take,
     });
     return { list, page, limit, total };
   }

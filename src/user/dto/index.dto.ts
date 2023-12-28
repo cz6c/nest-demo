@@ -25,16 +25,19 @@ export class UpdateUserDto extends OmitType(PartialType(CreateUserDto), [
   @ApiPropertyOptional({ description: '头像' })
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   readonly avatar: string;
 
   @ApiPropertyOptional({ description: '昵称' })
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   readonly nickname: string;
 
   @ApiPropertyOptional({ description: '生日' })
   @IsOptional()
   @IsDate()
+  @IsNotEmpty()
   readonly birthday: Date;
 }
 

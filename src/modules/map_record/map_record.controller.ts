@@ -10,7 +10,6 @@ import {
   CreateMapRecordDto,
   UpdateMapRecordDto,
   MapRecordVO,
-  MapRecordAllVO,
   MapRecordListVO,
   MapRecordListParamsDto,
 } from './dto/index.dto';
@@ -40,13 +39,6 @@ export class MapRecordController {
     @GetUser('followId') followId: number,
   ) {
     return await this.map_recordService.findAll(params, followId);
-  }
-
-  @ApiOperation({ summary: '列表' })
-  @ApiOkResponse({ type: MapRecordAllVO })
-  @Get('getAll')
-  async getAll(@GetUser('followId') followId: number) {
-    return await this.map_recordService.getAll(followId);
   }
 
   @ApiOperation({ summary: '详情' })

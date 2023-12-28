@@ -6,7 +6,7 @@ import { QINIU } from '#/index';
 
 @Entity('user')
 export class UserEntity extends CommonEntity {
-  @Column()
+  @Column({ nullable: true })
   username: string;
 
   @Column({ select: false })
