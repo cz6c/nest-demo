@@ -1,10 +1,10 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import {
   ApiProperty,
   ApiPropertyOptional,
   IntersectionType,
 } from '@nestjs/swagger';
-import { PaginationDto, PaginationVO, CommonVO } from '@/common/common.dto';
+import { CommonVO } from '@/common/common.dto';
 import { IdDto } from '@/common/common.dto';
 
 export class CreateCategoryDto {
@@ -12,6 +12,10 @@ export class CreateCategoryDto {
   @IsString()
   @IsNotEmpty()
   readonly name: string;
+
+  @ApiProperty({ description: 'parentId' })
+  @IsInt()
+  readonly parentId: number;
 }
 
 export class UpdateCategoryDto extends IntersectionType(
@@ -22,18 +26,18 @@ export class UpdateCategoryDto extends IntersectionType(
 export class CategoryVO extends CommonVO {
   @ApiPropertyOptional({ description: '名称' })
   readonly name: string;
-}
 
-// 列表
-export class CategoryListVO extends PaginationVO {
-  @ApiPropertyOptional({ type: [CategoryVO], description: '列表' })
-  readonly list: CategoryVO[];
+  @ApiPropertyOptional({ description: 'parentId' })
+  readonly parentId: number;
+
+  @ApiPropertyOptional({ description: 'children' })
+  readonly children?: CategoryVO[];
 }
 
 // 列表查询
-export class CategoryListParamsDto extends PaginationDto {
-  @ApiPropertyOptional({ description: '名称' })
+export class CategoryListParamsDto {
+  @ApiPropertyOptional({ description: 'parentId' })
   @IsOptional()
-  @IsString()
-  readonly name: string;
+  @IsInt()
+  readonly parentId: number;
 }

@@ -34,7 +34,9 @@ export class ArticleEntity extends CommonEntity {
   @Column({ nullable: true })
   htmlContent: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.articles)
+  @ManyToOne(() => UserEntity, (user) => user.articles, {
+    // createForeignKeyConstraints: false, //去除物理外键束缚
+  })
   @JoinColumn()
   author: UserEntity;
 

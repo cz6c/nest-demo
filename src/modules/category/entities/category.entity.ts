@@ -7,6 +7,9 @@ export class CategoryEntity extends CommonEntity {
   @Column({ nullable: true })
   name: string;
 
+  @Column({ nullable: true })
+  parentId: number;
+
   @OneToMany(() => ArticleEntity, (article) => article.category)
   articles: ArticleEntity[];
 }
