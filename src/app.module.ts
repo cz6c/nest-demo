@@ -12,6 +12,7 @@ import { TagModule } from './modules/tag/tag.module';
 import { MemorialDayModule } from './modules/memorial_day/memorial_day.module';
 import { MapRecordModule } from './modules/map_record/map_record.module';
 import envConfig from '../config/env';
+import { AccountingModule } from './modules/accounting/accounting.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import envConfig from '../config/env';
     TagModule,
     MemorialDayModule,
     MapRecordModule,
+    AccountingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
