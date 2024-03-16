@@ -14,6 +14,13 @@ import { PaginationDto, PaginationVO, CommonVO } from '@/common/common.dto';
 import { IdDto } from '@/common/common.dto';
 import { AccountingType } from '@/common/common.enum';
 
+export class CreateAccountingBeforeDto {
+  @ApiProperty({ description: '记账名称' })
+  @IsString()
+  @IsNotEmpty()
+  readonly text: string;
+}
+
 // 新增
 export class CreateAccountingDto {
   @ApiProperty({ description: '记账类型 1为收入、2为支出' })
