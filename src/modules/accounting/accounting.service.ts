@@ -8,9 +8,7 @@ import {
   AccountingVO,
   AccountingListVO,
   AccountingListParamsDto,
-  CreateAccountingBeforeDto,
 } from './dto/index.dto';
-import { AccountingType } from '@/common/common.enum';
 
 @Injectable()
 export class AccountingService {
@@ -19,28 +17,9 @@ export class AccountingService {
     private readonly memorialDayRepository: Repository<AccountingEntity>,
   ) {}
 
-  async createBefore(data: CreateAccountingBeforeDto) {
-    const { text } = data;
-    // 您有一笔￥{13000}元的{工资}{支出}已入账成功
-    const regex = /\{(.+?)\}/g; // {} 花括号
-    const strArr = text.match(regex);
-    if (strArr && strArr.length === 3) {
-      const arr = strArr.map((c) => c.replace(/\{|\}/g, ''));
-      const type = arr[2].includes('收入')
-        ? AccountingType.SHOURU
-        : AccountingType.ZHICHU;
-      this.create({
-        type,
-        title: arr[1],
-        price: Number(arr[0]),
-        remark: text.replace(/\{|\}/g, ''),
-      });
-    }
-  }
-
   // 创建
   async create(data: CreateAccountingDto) {
-    const newItem = this.memorialDayRepository.create(data);
+    const newItem = this.memorialDayRepository.create({ ...data });
     return await this.memorialDayRepository.save(newItem);
   }
 

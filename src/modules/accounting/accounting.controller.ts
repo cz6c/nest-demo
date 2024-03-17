@@ -11,7 +11,7 @@ import {
   AccountingVO,
   AccountingListVO,
   AccountingListParamsDto,
-  CreateAccountingBeforeDto,
+  CreateAccountingDto,
 } from './dto/index.dto';
 import { IdDto } from '@/common/common.dto';
 import { GetUser } from '@/decorator/getUser.decorator';
@@ -26,8 +26,8 @@ export class AccountingController {
   @Public()
   @ApiOperation({ summary: '创建' })
   @Post('create')
-  create(@Body() data: CreateAccountingBeforeDto) {
-    return this.accountingService.createBefore(data);
+  create(@Body() data: CreateAccountingDto) {
+    return this.accountingService.create(data);
   }
 
   @ApiOperation({ summary: '列表' })

@@ -1,16 +1,11 @@
 import { Entity, Column } from 'typeorm';
 import { CommonEntity } from '@/common/common.entity';
-import { AccountingType } from '@/common/common.enum';
 
 @Entity('accounting')
 export class AccountingEntity extends CommonEntity {
-  /** 记账类型 1为收入、2为支出*/
-  @Column({
-    type: 'enum',
-    enum: AccountingType,
-    default: AccountingType.SHOURU,
-  })
-  type: AccountingType;
+  /** 记账类型 */
+  @Column({ default: '' })
+  type: string;
 
   /** 记账名称 */
   @Column({ default: '' })
