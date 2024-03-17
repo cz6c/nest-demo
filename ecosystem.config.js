@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'nest_app',
+      name: 'ch_app',
       script: './dist/src/main.js',
       env: {
         NODE_ENV: 'development',
