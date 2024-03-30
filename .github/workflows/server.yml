@@ -35,7 +35,7 @@ jobs:
           # 用户
           REMOTE_USER: ${{ secrets.SERVER_USER }}
           # 目标地址
-          TARGET: '/www/wwwroot/ch_app'
+          TARGET: '/www/wwwroot/ch_app/server'
 
       # 安装依赖、重启服务
       - name: Server Reload
@@ -45,9 +45,13 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /www/wwwroot/ch_app
-            pnpm i
+            cp /www/wwwroot/ch_app/.env.prod /www/wwwroot/ch_app/server
+            cd /www/wwwroot/ch_app/server
+            pnpm install
             pnpm run build
-            cp /www/wwwroot/ch_config/.env.prod /www/wwwroot/ch_app
-            pm2 delete ch_app
+            cd ..
+            if pm2 list | grep -q "ch_app"; then
+              pm2 delete ch_app
+            fi
             pm2 start ecosystem.config.js --env production
+            pm2 save
